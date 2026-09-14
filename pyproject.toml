@@ -1,0 +1,22 @@
+[project]
+name = "software-development-data-challenge"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { email = "plsbetmax69420@gmail.com" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "matplotlib>=3.11.2",
+    "numpy>=2.5.3",
+    "pdoc>=16.0.0",
+    "pytest>=9.1.1",
+]
+
+# [project.scripts]
+# software-development-data-challenge = "software_development_data_challenge:main"
+#
+# [build-system]
+# requires = ["uv_build>=0.12.10,<0.13.0"]
+# build-backend = "uv_build"
