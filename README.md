@@ -22,17 +22,26 @@ task list, team workflow, and schedule.
 
 ## Quickstart
 
-No environment spec exists yet (that's one of the backlog tasks!). Until
-then, any Python 3.10+ with `numpy` and `matplotlib` installed will do:
+
+Create the Conda environment:
 
 ```sh
-pip install numpy matplotlib
+conda env create -f environment.yml
+conda activate astrolab-env
 python -m astrolab.pipeline
+```
+
+The `astroquery` package is optional and is only needed for the real-data
+bonus feature in `astrolab/realdata.py`. To use that feature, install it
+separately:
+
+```sh
+conda install -c conda-forge astroquery
 ```
 
 You should see it load the 5 sample frames and then stop with:
 
-```
+```text
 NotImplementedError: stack_frames: implement frame stacking
 ```
 

@@ -22,6 +22,11 @@ DEFAULT_TARGET = "M42"  # the Orion Nebula - bright, iconic, DSS-covered
 DEFAULT_SURVEY = "DSS"
 DEFAULT_PIXELS = 200
 
+try:
+    from astroquery.skyview import SkyView
+except ImportError:
+    SkyView = None
+
 
 def fetch_sky_image(position=DEFAULT_TARGET, survey=DEFAULT_SURVEY, pixels=DEFAULT_PIXELS):
     """Fetch a real image of the sky around ``position`` from a public
@@ -32,4 +37,10 @@ def fetch_sky_image(position=DEFAULT_TARGET, survey=DEFAULT_SURVEY, pixels=DEFAU
     caching the result to disk (e.g. as .npy or .fits) so re-running the
     demo doesn't depend on network access every time.
     """
+    if SkyView is None:
+        raise ImportError(
+            "astroquery is required for fetch_sky_image. "
+            "Install it with: conda install -c conda-forge astroquery"
+        )
+
     raise NotImplementedError("fetch_sky_image: implement a real astroquery fetch")
