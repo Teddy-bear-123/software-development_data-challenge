@@ -1,5 +1,7 @@
 # Astro Data Challenge
 
+[![CI](https://github.com/jzoubian/software-development_data-challenge/actions/workflows/ci.yml/badge.svg)](https://github.com/jzoubian/software-development_data-challenge/actions/workflows/ci.yml)
+
 Build a tiny astro-image pipeline, together, as a team, over one evening
 and one morning.
 
@@ -75,6 +77,13 @@ pipeline code), see [`notebooks/explore_frames.ipynb`](notebooks/explore_frames.
   rest of the pipeline stays deterministic and offline by design.
 - `notebooks/explore_frames.ipynb` — loads and plots the sample frames,
   for a quick look at the input data before touching `pipeline.py`.
+
+## Continuous integration
+
+The GitHub Actions CI workflow runs on every push and pull request using
+Python 3.11. It installs the project dependencies, generates the sample
+frames, runs an I/O smoke check, and runs the pytest suite when test files
+are available.
 
 ## License
 
