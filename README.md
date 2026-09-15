@@ -22,11 +22,11 @@ task list, team workflow, and schedule.
 
 ## Quickstart
 
-No environment spec exists yet (that's one of the backlog tasks!). Until
-then, any Python 3.10+ with `numpy` and `matplotlib` installed will do:
+Create the Conda environment:
 
 ```sh
-pip install numpy matplotlib
+conda env create -f environment.yml
+conda activate astrolab-env
 python -m astrolab.pipeline
 ```
 
