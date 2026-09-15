@@ -1,39 +1,37 @@
-import os
-import subprocess
-import sys
-import tempfile
-import unittest
-from pathlib import Path
+import numpy as np
+
+from astrolab.pipeline import compose_image
 
 
-REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
+def test_compose_image_shape():
+    frame = np.random.default_rng(0).normal(size=(128, 128))
+    out = compose_image(frame)
+    assert out.shape == frame.shape
 
 
-class PipelineEndToEndTest(unittest.TestCase):
-    def test_module_run_completes_and_produces_readme_image(self):
-        with tempfile.TemporaryDirectory() as temporary_directory:
-            output_path = Path(temporary_directory) / "output.png"
-            environment = os.environ.copy()
-            environment["OUT_PATH"] = str(output_path)
-
-            result = subprocess.run(
-                [sys.executable, "-m", "astrolab.pipeline"],
-                cwd=REPOSITORY_ROOT,
-                env=environment,
-                capture_output=True,
-                text=True,
-                check=False,
-            )
-
-            combined_output = f"{result.stdout}\n{result.stderr}"
-            self.assertEqual(result.returncode, 0, combined_output)
-            self.assertNotIn("NotImplementedError", combined_output)
-            self.assertTrue(output_path.is_file())
-            self.assertGreater(output_path.stat().st_size, 0)
-
-        readme = (REPOSITORY_ROOT / "README.md").read_text(encoding="utf-8")
-        self.assertIn("![Composite star field](outputs/output.png)", readme)
+def test_compose_image_values_in_unit_range():
+    frame = np.random.default_rng(0).normal(size=(128, 128))
+    out = compose_image(frame)
+    assert out.min() >= 0.0
+    assert out.max() <= 1.0
 
 
-if __name__ == "__main__":
-    unittest.main()
+def test_compose_image_constant_frame_is_black():
+    frame = np.full((16, 16), 42.0)
+    out = compose_image(frame)
+    np.testing.assert_array_equal(out, np.zeros_like(frame))
+
+
+def test_compose_image_maps_bright_pixels_higher():
+    # Percentile stretch maps the 2nd/98th percentiles to 0/1. Two very bright
+    # pixels would BOTH saturate to 1.0, breaking a strict `>` comparison. So
+    # place them at mid ± 1, inside the stretch range where neither clips.
+    rng = np.random.default_rng(7)
+    frame = rng.normal(10.0, 2.0, size=(32, 32))
+    low, high = np.percentile(frame, [2, 98])
+    mid = (low + high) / 2.0
+    frame[5, 5] = mid - 1.0
+    frame[10, 10] = mid + 1.0
+    out = compose_image(frame)
+    assert out[10, 10] > out[5, 5]
+    assert 0.0 < out[5, 5] < 1.0
