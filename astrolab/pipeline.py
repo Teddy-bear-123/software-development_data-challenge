@@ -95,10 +95,6 @@ def run():
     print("Composing final image...")
     out = compose_image(stacked)
 
-    out_path = os.environ.get("OUT_PATH", "outputs/output_time.png")
-    plt.imsave(out_path, out, cmap="gray")
-    print(f"  saved hero image to {out_path}")
-
     out_path = os.environ.get("OUT_PATH")
     if out_path is None:
         out_dir = "outputs"
