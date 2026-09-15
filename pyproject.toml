@@ -1,19 +1,19 @@
 [project]
 name = "Astrolab"
 version = "0.1.0"
- description = "Astro data challenge: a tiny-image pipeline"
+description = "Astro data challenge: a tiny-image pipeline"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-    "matplotlib>=3.11.2",
-    "numpy>=2.5.3",
+    "matplotlib",
+    "numpy>=2.0,<3",
 ]
 
- [project.optional-dependencies]
- dev = [
-     "pdoc>=16.0.0",
-     "pytest>=9.1.1",
- ]
+[project.optional-dependencies]
+dev = [
+    "pdoc>=16.0.0",
+    "pytest>=9.1.1",
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
