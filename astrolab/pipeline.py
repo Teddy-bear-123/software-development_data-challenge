@@ -7,6 +7,8 @@ conflicts during the Day 2 integration session - that's by design, not a
 bug: it's the one place every team's PR touches.
 """
 
+import numpy as np
+
 from astrolab.io import load_frame_set
 from astrolab.synth import SAMPLE_FRAMES_DIR, regenerate_sample_data
 
@@ -48,13 +50,24 @@ def measure_photometry(frame, sources):
     raise NotImplementedError("measure_photometry: implement aperture photometry")
 
 
-def compose_image(frame):
-    """Turn a raw frame into a nice display image.
+def compose_image(frame: np.ndarray) -> np.ndarray:
+    """ Contrastive stretch to turn a stacked frame into a (good) display image
+    
+    Args:
+        frame: np.ndarray
 
-    TODO(backlog): implement contrast stretching / a false-color
-    composite for the final "hero image".
+    Returns:
+        np.ndarraya, values in [0.0, 1.0]
+
+    Applies a percentile-based contrast stretch: the 2nd percentile maps
+    to black, the 98th percentile maps to white, everything in between is
+    linearly scaled.
     """
-    raise NotImplementedError("compose_image: implement display composition")
+    low, high = np.percentile(frame, [2, 98])
+    if high <= low:
+        return np.zeros_like(frame)
+    stretched = np.clip((frame - low) / (high - low), 0.0, 1.0)
+    return stretched
 
 
 def run():
