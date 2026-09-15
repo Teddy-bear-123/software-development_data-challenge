@@ -7,6 +7,12 @@ conflicts during the Day 2 integration session - that's by design, not a
 bug: it's the one place every team's PR touches.
 """
 
+import os
+from datetime import datetime, UTC
+
+import matplotlib.pyplot as plt
+import numpy as np
+
 from astrolab.io import load_frame_set
 from astrolab.synth import SAMPLE_FRAMES_DIR, regenerate_sample_data
 
@@ -48,13 +54,24 @@ def measure_photometry(frame, sources):
     raise NotImplementedError("measure_photometry: implement aperture photometry")
 
 
-def compose_image(frame):
-    """Turn a raw frame into a nice display image.
+def compose_image(frame: np.ndarray) -> np.ndarray:
+    """Contrastive stretch to turn a stacked frame into a (good) display image
 
-    TODO(backlog): implement contrast stretching / a false-color
-    composite for the final "hero image".
+    Args:
+        frame: np.ndarray
+
+    Returns:
+        np.ndarraya, values in [0.0, 1.0]
+
+    Applies a percentile-based contrast stretch: the 2nd percentile maps
+    to black, the 98th percentile maps to white, everything in between is
+    linearly scaled.
     """
-    raise NotImplementedError("compose_image: implement display composition")
+    low, high = np.percentile(frame, [2, 98])
+    if high <= low:
+        return np.zeros_like(frame)
+    stretched = np.clip((frame - low) / (high - low), 0.0, 1.0)
+    return stretched
 
 
 def run():
@@ -76,7 +93,16 @@ def run():
     print(table)
 
     print("Composing final image...")
-    return compose_image(stacked)
+    out = compose_image(stacked)
+
+    out_path = os.environ.get("OUT_PATH")
+    if out_path is None:
+        out_dir = "outputs"
+        os.makedirs(out_dir, exist_ok=True)
+        timestamp = datetime.now(UTC).isoformat()
+        out_path = os.path.join(out_dir, f"output_{timestamp}.png")
+    plt.imsave(out_path, out, cmap="gray")
+    print(f"  saved output image to {out_path}")
 
 
 if __name__ == "__main__":

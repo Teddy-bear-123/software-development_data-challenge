@@ -9,6 +9,9 @@ and one morning.
 nice-looking composite image, with a table of the brightness of every
 star found along the way.
 
+
+![Composite star field](./outputs/output.png)
+
 ```
 load frames → stack/denoise → detect sources → measure photometry → composite
 ```
@@ -32,7 +35,6 @@ conda env create -f environment.yml
 conda activate astrolab-env
 python -m astrolab.pipeline
 ```
-
 The `astroquery` package is optional and is only needed for the real-data
 bonus feature in `astrolab/realdata.py`. To use that feature, install it
 separately:
@@ -40,7 +42,6 @@ separately:
 ```sh
 conda install -c conda-forge astroquery
 ```
-
 You should see it load the 5 sample frames and then stop with:
 
 ```text
