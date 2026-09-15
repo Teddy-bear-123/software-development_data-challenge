@@ -40,7 +40,7 @@ def fetch_sky_image(position=DEFAULT_TARGET, survey=DEFAULT_SURVEY, pixels=DEFAU
     if SkyView is None:
         raise ImportError(
             "astroquery is required for fetch_sky_image. "
-            "Install it with: pip install astroquery"
+            "Install it with: conda install -c conda-forge astroquery"
         )
 
     raise NotImplementedError("fetch_sky_image: implement a real astroquery fetch")
