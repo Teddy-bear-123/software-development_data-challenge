@@ -7,6 +7,10 @@ conflicts during the Day 2 integration session - that's by design, not a
 bug: it's the one place every team's PR touches.
 """
 
+import os
+from datetime import datetime, UTC
+
+import matplotlib.pyplot as plt
 import numpy as np
 
 from astrolab.io import load_frame_set
@@ -51,8 +55,8 @@ def measure_photometry(frame, sources):
 
 
 def compose_image(frame: np.ndarray) -> np.ndarray:
-    """ Contrastive stretch to turn a stacked frame into a (good) display image
-    
+    """Contrastive stretch to turn a stacked frame into a (good) display image
+
     Args:
         frame: np.ndarray
 
@@ -89,7 +93,20 @@ def run():
     print(table)
 
     print("Composing final image...")
-    return compose_image(stacked)
+    out = compose_image(stacked)
+
+    out_path = os.environ.get("OUT_PATH", "outputs/output_time.png")
+    plt.imsave(out_path, out, cmap="gray")
+    print(f"  saved hero image to {out_path}")
+
+    out_path = os.environ.get("OUT_PATH")
+    if out_path is None:
+        out_dir = "outputs"
+        os.makedirs(out_dir, exist_ok=True)
+        timestamp = datetime.now(UTC).isoformat()
+        out_path = os.path.join(out_dir, f"output_{timestamp}.png")
+    plt.imsave(out_path, out, cmap="gray")
+    print(f"  saved output image to {out_path}")
 
 
 if __name__ == "__main__":
