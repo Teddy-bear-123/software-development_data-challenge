@@ -30,6 +30,8 @@ pip install numpy matplotlib
 python -m astrolab.pipeline
 ```
 
+![Composite star field](./outputs/output.png)
+
 You should see it load the 5 sample frames and then stop with:
 
 ```
